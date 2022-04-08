@@ -14,7 +14,8 @@ constexpr double PI = 3.14159265;
 
 int main() {
 	Log::Init(LOG_LEVEL_ALL);
-	LOG_INFO("Let's go!");
+	LOG_INFO("Welcome to PIC-DSMC Simulation!");
+
 	//==============================================================================
 	//==============================================================================
 	//==============================================================================
@@ -22,10 +23,9 @@ int main() {
 
 	// Try to use multiples of the relevant geometry dimensions.
 	// Otherwise the program will change the geometry accordingly.
-	// +1 is for cell count to be as intended.
-	int AxialNodeCount = 250 + 1;
-	int RadialNodeCount = 100 + 1;
-	int ThetaNodeCount = 10 + 1;
+	double dz = 0.00002;
+	double dr = 0.00002;
+	double dtheta = PI / 60;
 
 	// Physical lengths of the domain.
 	double ThetaLength = PI / 6;	// [rad] Whole azimuthal length.
@@ -55,9 +55,9 @@ int main() {
 
 	Geometry geometry = Geometry();
 
-	geometry.SetAxialNodeCount(AxialNodeCount);
-	geometry.SetRadialNodeCount(RadialNodeCount);
-	geometry.SetThetaNodeCount(ThetaNodeCount);
+	geometry.Setdz(dz);
+	geometry.Setdr(dr);
+	geometry.Setdtheta(dtheta);
 
 	geometry.SetThetaLength(ThetaLength);
 	geometry.SetAxialLength(AxialLength);

@@ -6,7 +6,9 @@ public:
 	explicit PoissonSolver();
 	~PoissonSolver();
 
-private:
+	void ConfigureCoefficients();
 
+private:
+	double* m_A;
 };
 

@@ -9,9 +9,9 @@ Geometry::Geometry() {
 Geometry::~Geometry() {}
 
 //===============================================
-void Geometry::SetThetaNodeCount(int count) { m_ThetaNodeCount = count; }
-void Geometry::SetRadialNodeCount(int count) { m_RadialNodeCount = count; }
-void Geometry::SetAxialNodeCount(int count) { m_AxialNodeCount = count; }
+void Geometry::Setdtheta(double dtheta) { m_dtheta = dtheta; }
+void Geometry::Setdr(double dr) { m_dr = dr; }
+void Geometry::Setdz(double dz) { m_dz = dz; }
 //===============================================
 void Geometry::SetThetaLength(double length) { m_ThetaLength = length; }
 void Geometry::SetAxialLength(double length) { m_AxialLength = length; }
@@ -28,23 +28,43 @@ void Geometry::SetDistanceBetweenGrids(double length) { m_zDistance = length; };
 //===============================================
 //===============================================
 void Geometry::Calculation() {
-	m_TotalNodeCount = m_AxialNodeCount + m_RadialNodeCount + m_ThetaNodeCount;
-
 	m_ThetaEnd = m_ThetaBegin + m_ThetaLength;
 	m_RadialEnd = m_RadialBegin + m_RadialLength;
 	m_AxialEnd = m_AxialBegin + m_AxialLength;
+	//===============================================
+	//===============================================
+	//===============================================
+	// FIXING TOTAL LENGTH PROBLEMS:
+	double epsilon = pow(10, -6);
 
-	m_dr = m_RadialLength / (m_RadialNodeCount - 1);
-	m_dz = m_AxialLength / (m_AxialNodeCount - 1);
-	m_dtheta = m_ThetaLength / (m_ThetaNodeCount - 1);
+	m_RadialNodeCount = (int)(m_RadialLength / m_dr + 0.5 + 1);
+	double a = (m_RadialNodeCount-1) * m_dr;
+	if (fabs(a - m_RadialLength) > epsilon) {
+		LOG_WARN("(NODE COUNT PROBLEM) Whole radial length has changed from {:.8} m to {:.8} m", m_RadialLength, a);
+		m_RadialLength = a;
+	}
+
+	m_AxialNodeCount = (int)(m_AxialLength / m_dz + 0.5 + 1);
+	a = (m_AxialNodeCount - 1) * m_dz;
+	if (fabs(a - m_AxialLength) > epsilon) {
+		LOG_WARN("(NODE COUNT PROBLEM) Whole axial length has changed from {:.8} m to {:.8} m", m_AxialLength, a);
+		m_AxialLength = a;
+	}
+
+	m_ThetaNodeCount = (int)(m_ThetaLength / m_dtheta + 0.5 + 1);
+	a = (m_ThetaNodeCount - 1) * m_dtheta;
+	if (fabs(a - m_ThetaLength) > epsilon) {
+		LOG_WARN("(NODE COUNT PROBLEM) Whole azimuthal length has changed from {:.8} rad to {:.8} rad", m_ThetaLength, a);
+		m_ThetaLength = a;
+	}
+
+	m_TotalNodeCount = m_AxialNodeCount + m_RadialNodeCount + m_ThetaNodeCount;
 	//===============================================
 	//===============================================
 	//===============================================
 	// FIXING RADIAL PROBLEMS:
-	double epsilon = pow(10, -6);
-
 	m_rScreenBeginNode = (int)(m_rScreen / m_dr + 0.5);
-	double a = m_rScreenBeginNode * m_dr;
+	a = m_rScreenBeginNode * m_dr;
 	if (fabs(a - m_rScreen) > epsilon) {
 		LOG_WARN("(NODE COUNT PROBLEM) Radius of the screen grid has changed from {:.8} m to {:.8} m", m_rScreen, a);
 		m_rScreen = a;
@@ -89,15 +109,12 @@ void Geometry::Calculation() {
 	}
 
 	m_zPlume = m_AxialLength - (m_zDischarge + m_zDistance + m_wAccel + m_wScreen);
-	//===============================================
-	//===============================================
-	//===============================================
 }
 
 void Geometry::SetGeometry(const Geometry& geometry) {
-	m_ThetaNodeCount = geometry.GetThetaNodeCount();
-	m_RadialNodeCount = geometry.GetRadialNodeCount();
-	m_AxialNodeCount = geometry.GetAxialNodeCount();
+	m_dtheta = geometry.Getdtheta();
+	m_dr = geometry.Getdr();
+	m_dz = geometry.Getdz();
 
 	m_ThetaLength = geometry.GetThetaLength();
 	m_RadialLength = geometry.GetRadialLength();

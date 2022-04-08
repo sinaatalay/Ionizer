@@ -5,9 +5,9 @@ public:
 	explicit Geometry();
 	~Geometry();
 	//===============================================
-	void SetThetaNodeCount(int count);
-	void SetRadialNodeCount(int count);
-	void SetAxialNodeCount(int count);
+	void Setdtheta(double dtheta);
+	void Setdr(double dr);
+	void Setdz(double dz);
 	//===============================================
 	void SetThetaLength(double length);
 	void SetRadialLength(double length);

@@ -1,0 +1,3 @@
+[submodule "PIC-DSMC-Simulation/vendor/spdlog"]
+	path = PIC-DSMC-Simulation/vendor/spdlog
+	url = https://github.com/gabime/spdlog

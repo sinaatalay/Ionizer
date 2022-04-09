@@ -58,7 +58,7 @@ void Geometry::Calculation() {
 		m_ThetaLength = a;
 	}
 
-	m_TotalNodeCount = m_AxialNodeCount + m_RadialNodeCount + m_ThetaNodeCount;
+	m_TotalNodeCount = m_AxialNodeCount * m_RadialNodeCount * m_ThetaNodeCount;
 	//===============================================
 	//===============================================
 	//===============================================

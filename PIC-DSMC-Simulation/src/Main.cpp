@@ -80,6 +80,8 @@ int main() {
 	PoissonSolver Poisson = PoissonSolver();
 	Poisson.SetGeometry(geometry);
 	Poisson.LogGeometry();
-
+	LOG_CRITICAL("Configuration starts!");
+	Poisson.ConfigureCoefficients();
+	LOG_CRITICAL("Configuration ends!");
 	std::cin.get();
 }

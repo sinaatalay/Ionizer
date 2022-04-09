@@ -19,12 +19,17 @@ void Geometry::SetRadialLength(double length) { m_RadialLength = length; }
 //===============================================
 void Geometry::SetScreenGridWidth(double length) { m_wScreen = length; }
 void Geometry::SetScreenGridRadius(double length) { m_rScreen = length; }
+void Geometry::SetScreenGridVoltage(double v) { m_VScreen = v; }
 //===============================================
 void Geometry::SetAccelGridWidth(double length) { m_wAccel = length; }
 void Geometry::SetAccelGridRadius(double length) { m_rAccel = length; }
+void Geometry::SetAccelGridVoltage(double v) { m_VAccel = v; }
 //===============================================
 void Geometry::SetAxialDischargeLength(double length) { m_zDischarge = length; }
 void Geometry::SetDistanceBetweenGrids(double length) { m_zDistance = length; };
+//===============================================
+void Geometry::SetVDischarge(double v) { m_VDischarge = v; }
+void Geometry::SetVPlume(double v) { m_VPlume = v; }
 //===============================================
 //===============================================
 void Geometry::Calculation() {
@@ -122,12 +127,17 @@ void Geometry::SetGeometry(const Geometry& geometry) {
 
 	m_wScreen = geometry.GetwScreen();
 	m_rScreen = geometry.GetrScreen();
+	m_VScreen = geometry.GetVScreen();
 
 	m_wAccel = geometry.GetwAccel();
 	m_rAccel = geometry.GetrAccel();
+	m_VAccel = geometry.GetVAccel();
 
 	m_zDischarge = geometry.GetzDischarge();
 	m_zDistance = geometry.GetzDistance();
+
+	m_VDischarge = geometry.GetVDischarge();
+	m_VPlume = geometry.GetVPlume();
 	Calculation();
 }
 
@@ -153,14 +163,18 @@ void Geometry::LogGeometry() const {
 	LOG_INFO("End of the axial domain: {:.5} m", m_AxialEnd);
 	//===============================================
 	LOG_INFO("Portion of the domain up to the screen grid: {:.5} m", m_zDischarge);
+	LOG_INFO("Voltage of the discharge: {:.5} V", m_VDischarge);
 	LOG_INFO("Distance betweeen the screen and accel grid: {:.5} m", m_zDistance);
 	LOG_INFO("Portion of the domain that remains in the plume region: {:.5} m", m_zPlume);
+	LOG_INFO("Voltage of the plume: {:.5} V", m_VPlume);
 	//===============================================
 	LOG_INFO("Width of the screen grid: {:.5} m", m_wScreen);
 	LOG_INFO("Radius of the screen grid: {:.5} m", m_rScreen);
+	LOG_INFO("Voltage of the screen grid: {:.5} V", m_VScreen);
 	//===============================================
 	LOG_INFO("Width of the acceleration grid: {:.5} m", m_wAccel);
 	LOG_INFO("Radius of the acceleration grid: {:.5} m", m_rAccel);
+	LOG_INFO("Voltage of the acceleration grid: {:.5} V", m_VAccel);
 	//===============================================
 	LOG_INFO("Start node of the acceleration grid in radial direction: {}", m_rAccelBeginNode);
 	LOG_INFO("Start node of the acceleration grid in axial direction: {}", m_zAccelBeginNode);

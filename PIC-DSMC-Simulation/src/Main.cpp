@@ -43,10 +43,14 @@ int main() {
 	double DistanceBetweenGrids = 0.0012;		// [m]
 
 	// Potentials
-	double V_Upstream = 2266;		 // Bulk plasma potential 
-	double V_Downstream = 0;		 // Plume plasma potential
+	double V_Discharge = 2266;		 // Bulk plasma potential 
+	double V_Plume = 0;				 // Plume plasma potential
 	double V_Accel = -400;			 // Acceleration grid (second grid) potential 
 	double V_Screen = 2241;			 // Screen grid (first grid) potential
+
+	// Poisson solver settings
+	int MaxIterations = 1000;			// Maximum number GMRES iterations to take.
+	double AbsoluteTolerance = 0.001;	// Absolute tolerance for GMRES.
 
 	//==============================================================================
 	//==============================================================================
@@ -65,12 +69,17 @@ int main() {
 
 	geometry.SetScreenGridWidth(ScreenGridWidth);
 	geometry.SetScreenGridRadius(ScreenGridHoleRadius);
+	geometry.SetScreenGridVoltage(V_Screen);
 
 	geometry.SetAccelGridWidth(AccelerationGridWidth);
 	geometry.SetAccelGridRadius(AccelerationGridHoleRadius);
+	geometry.SetAccelGridVoltage(V_Accel);
 
 	geometry.SetAxialDischargeLength(DischageRegionAxialLength);
 	geometry.SetDistanceBetweenGrids(DistanceBetweenGrids);
+
+	geometry.SetVDischarge(V_Discharge);
+	geometry.SetVPlume(V_Plume);
 
 	//==============================================================================
 	//==============================================================================
@@ -80,8 +89,13 @@ int main() {
 	PoissonSolver Poisson = PoissonSolver();
 	Poisson.SetGeometry(geometry);
 	Poisson.LogGeometry();
-	LOG_CRITICAL("Configuration starts!");
+
+	Poisson.AllocateMemory();
 	Poisson.ConfigureCoefficients();
-	LOG_CRITICAL("Configuration ends!");
+	Poisson.ApplyBoundaryConditions();
+
+	Poisson.SolvePoisson(MaxIterations, AbsoluteTolerance);
+
+	LOG_INFO("Have a nice day!");
 	std::cin.get();
 }

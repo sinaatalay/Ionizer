@@ -26,11 +26,11 @@ void PoissonSolver::AllocateMemory() {
 	m_A = new double[m_Alength];		// Allocate dynamic memory for m_A array for the first time.
 	m_Arow = new int[m_Alength];		// Allocate dynamic memory for m_Arow array for the first time.
 	m_Acol = new int[m_Alength];		// Allocate dynamic memory for m_Acol array for the first time.
-	m_b = new double[m_n];		// Allocate dynamic memory for m_Ab array for the first time.
-	m_x = new double[m_n];		// Allocate dynamic memory for m_Ab array for the first time.
+	m_b = new double[m_n];				// Allocate dynamic memory for m_Ab array for the first time.
+	m_x = new double[m_n];				// Allocate dynamic memory for m_Ab array for the first time.
 }
 
-void PoissonSolver::ConfigureCoefficients() {
+void PoissonSolver::ConfigureMatrixA() {
 	int step_j = m_RadialNodeCount * m_AxialNodeCount * 7;
 	int step_i = m_AxialNodeCount * 7;
 	int step_k = 7;
@@ -74,8 +74,7 @@ void PoissonSolver::ConfigureCoefficients() {
 			}
 		}
 	}
-	ApplyBoundaryConditions();
-	FixColumnIndices();
+	ApplyBoundaryConditions();;
 }
 
 void PoissonSolver::ApplyBoundaryConditions() {
@@ -243,19 +242,8 @@ void PoissonSolver::ApplyBoundaryConditions() {
 	}
 }
 
-void PoissonSolver::FixColumnIndices() {
-	for (int i = 0; i < m_Alength; i++) {
-		if (m_Acol[i] < 0) {
-			m_Acol[i] = 0;
-		}
-		else if(m_Acol[i] > m_n) {
-			m_Acol[i] = 0;
-		}
-	}
-}
-
-void PoissonSolver::OutputCoefficients() {
-	std::ofstream file("PoissonResults.txt");
+void PoissonSolver::OutputMatrixA() {
+	std::ofstream file("PoissonMatrixA.txt");
 
 	for (int i = 0; i < m_n; i++) {
 		file << m_x[i] << std::endl;
@@ -265,36 +253,4 @@ void PoissonSolver::OutputCoefficients() {
 
 void PoissonSolver::SolvePoisson(int MaxIterations, int KSD, double AbsoluteTolerance) {
 
-	// Initial random guess for x:
-	for (int i = 0; i < (m_n); i++) {
-		m_x[i] = -100;
-	}
-
-	// Function mgmres_st inputs:
-	//	m_n:				the order of the linear system
-	//	m_Alength:			the number of nonzero matrix values.
-	//	m_Arow:				the row indices
-	//	m_Acol:				the column indices
-	//	m_A:				the nonzero matrix values
-	//	m_x:				random guess for the solution
-	//	m_b:				the right hand side of the linear system
-	//	MaxIterations:		the maximum number of (outer) iterations to take
-	//	KSD:				the maximum number of (inner) iterations to take which determines the dimension of Krylov subspace.
-	//	AbsoluteTolerance:	self explanatory
-	mgmres_st(m_n, m_Alength, m_Arow, m_Acol, m_A, m_x, m_b, MaxIterations, KSD, AbsoluteTolerance);
-
-
-	// TEST:
-	// int n = 3;
-	// int len = 8;
-	// double A[8] = { 3,2,1,4,6,0,0,0 };
-	// int row[8] = { 0,0,1,1,2,0,0,1 };
-	// int col[8] = { 1,2,0,2,0,1,2,0 };
-	// double x[3] = { 1,1,1 };
-	// double b[3] = { 0,0,4 };
-	// int nn = 3;
-	//  
-	// mgmres_st(n, len, row, col, A, x, b, MaxIterations, nn, AbsoluteTolerance);
-	// 
-	// LOG_INFO("x={}, {}, {}", x[0], x[1], x[2]);
 }

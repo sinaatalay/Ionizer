@@ -8,10 +8,9 @@ public:
 
 	void AllocateMemory();
 
-	void ConfigureCoefficients();
+	void ConfigureMatrixA();
 	void ApplyBoundaryConditions();
-	void FixColumnIndices();
-	void OutputCoefficients();
+	void OutputMatrixA();
 
 	void SolvePoisson(int m_MaxIterations, int KrylovSubspaceDimension, double m_AbsoluteTolerance);
 private:

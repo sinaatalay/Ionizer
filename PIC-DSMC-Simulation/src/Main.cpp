@@ -3,7 +3,6 @@ constexpr double PI = 3.14159265;
 //===C++ Libraries===============
 #include <iostream>
 #include <cmath>
-#include <ppl.h> // parallel_for
 
 //===Vendor======================
 #include "Core/Log.h" // Logger from https://github.com/gabime/spdlog
@@ -93,11 +92,9 @@ int main() {
 
 	Poisson.AllocateMemory();
 
-	Poisson.ConfigureCoefficients();
+	Poisson.ConfigureMatrixA();
 
 	Poisson.SolvePoisson(MaxIterations, KrylovSubspaceDimension, AbsoluteTolerance);
-
-	Poisson.OutputCoefficients();
 
 	LOG_INFO("Have a nice day!");
 	std::cin.get();

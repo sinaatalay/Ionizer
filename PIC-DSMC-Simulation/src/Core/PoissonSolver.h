@@ -7,9 +7,13 @@ public:
 	~PoissonSolver();
 
 	void AllocateMemory();
+
 	void ConfigureCoefficients();
 	void ApplyBoundaryConditions();
-	void SolvePoisson(int m_MaxIterations, double m_AbsoluteTolerance);
+	void FixColumnIndices();
+	void OutputCoefficients();
+
+	void SolvePoisson(int m_MaxIterations, int KrylovSubspaceDimension, double m_AbsoluteTolerance);
 private:
 	// Poisson equation in Ax=b form:
 	int m_n;			// The order of the linear system.

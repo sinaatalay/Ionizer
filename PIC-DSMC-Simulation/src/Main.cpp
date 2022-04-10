@@ -25,7 +25,7 @@ int main() {
 	// Otherwise the program will change the geometry accordingly.
 	double dz = 0.00002;
 	double dr = 0.00002;
-	double dtheta = PI / 60;
+	double dtheta = PI / 12;
 
 	// Physical lengths of the domain.
 	double ThetaLength = PI / 6;	// [rad] Whole azimuthal length.
@@ -49,8 +49,9 @@ int main() {
 	double V_Screen = 2241;			 // Screen grid (first grid) potential
 
 	// Poisson solver settings
-	int MaxIterations = 1000;			// Maximum number GMRES iterations to take.
-	double AbsoluteTolerance = 0.001;	// Absolute tolerance for GMRES.
+	int MaxIterations = 100;			// Maximum number of outer GMRES iterations to take
+	int KrylovSubspaceDimension = 850;	// Maximum number of inner GMRES iterations to take (can't be bigger than the order of the linear system)
+	double AbsoluteTolerance = 0.001;	// Absolute tolerance for GMRES
 
 	//==============================================================================
 	//==============================================================================
@@ -91,10 +92,12 @@ int main() {
 	Poisson.LogGeometry();
 
 	Poisson.AllocateMemory();
-	Poisson.ConfigureCoefficients();
-	Poisson.ApplyBoundaryConditions();
 
-	Poisson.SolvePoisson(MaxIterations, AbsoluteTolerance);
+	Poisson.ConfigureCoefficients();
+
+	Poisson.SolvePoisson(MaxIterations, KrylovSubspaceDimension, AbsoluteTolerance);
+
+	Poisson.OutputCoefficients();
 
 	LOG_INFO("Have a nice day!");
 	std::cin.get();

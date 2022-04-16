@@ -1,9 +1,11 @@
 #pragma once
 
-class Geometry {
+namespace picdsmc {
+	class Geometry {
 public:
-	explicit Geometry();
-	~Geometry();
+	Geometry();
+	explicit Geometry(const Geometry& geometry);
+	virtual ~Geometry();
 	//===============================================
 	void Setdtheta(double dtheta);
 	void Setdr(double dr);
@@ -72,9 +74,8 @@ public:
 	double GetVPlume() const { return m_VPlume; }
 	//===============================================
 	//===============================================
-	void Calculation();
+	void GeometryCalculation();
 	void LogGeometry() const;
-	void SetGeometry(const Geometry&);
 protected:
 	double m_ThetaLength;	// [rad] Whole azimuthal length
 	double m_AxialLength;	// [m] Whole axial length
@@ -116,3 +117,4 @@ protected:
 	int m_zScreenBeginNode; // Start node of the screen grid in axial direction
 	int m_zScreenEndNode;	// End node of the screen grid in axial direction
 };
+}

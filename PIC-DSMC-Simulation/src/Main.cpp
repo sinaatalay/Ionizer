@@ -1,4 +1,4 @@
-constexpr double PI = 3.14159265;
+constexpr double pi = 3.141592653589793; //Compile time constant.
 
 //===C++ Libraries===============
 #include <iostream>
@@ -11,8 +11,10 @@ constexpr double PI = 3.14159265;
 #include "Core/Geometry.h"
 #include "Core/PoissonSolver.h"
 
+using namespace picdsmc;
+
 int main() {
-	Log::Init(LOG_LEVEL_ALL);
+	LOG_INIT(LOG_LEVEL_ALL);
 	LOG_INFO("Welcome to PIC-DSMC Simulation!");
 
 	//==============================================================================
@@ -24,10 +26,10 @@ int main() {
 	// Otherwise the program will change the geometry accordingly.
 	double dz = 0.00002;
 	double dr = 0.00002;
-	double dtheta = PI / 12;
+	double dtheta = pi / 12;
 
 	// Physical lengths of the domain.
-	double ThetaLength = PI / 6;	// [rad] Whole azimuthal length.
+	double ThetaLength = pi / 6;	// [rad] Whole azimuthal length.
 	double AxialLength = 0.005;		// [m] Whole axial length.
 	double RadialLength = 0.002;	// [m] Whole radial length.
 
@@ -57,7 +59,7 @@ int main() {
 	//==============================================================================
 	//==============================================================================
 
-	Geometry geometry = Geometry();
+	Geometry geometry;
 
 	geometry.Setdz(dz);
 	geometry.Setdr(dr);
@@ -86,15 +88,12 @@ int main() {
 	//==============================================================================
 	//==============================================================================
 
-	PoissonSolver Poisson = PoissonSolver();
-	Poisson.SetGeometry(geometry);
-	Poisson.LogGeometry();
+	PoissonSolver poisson(geometry);
 
-	Poisson.AllocateMemory();
+	poisson.LogGeometry();
 
-	Poisson.ConfigureMatrixA();
-
-	Poisson.SolvePoisson(MaxIterations, KrylovSubspaceDimension, AbsoluteTolerance);
+	poisson.ConfigureMatrixA();
+	poisson.SolvePoisson(MaxIterations, KrylovSubspaceDimension, AbsoluteTolerance);
 
 	LOG_INFO("Have a nice day!");
 	std::cin.get();

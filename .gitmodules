@@ -1,3 +1,6 @@
 [submodule "PIC-DSMC-Simulation/vendor/spdlog"]
 	path = PIC-DSMC-Simulation/vendor/spdlog
 	url = https://github.com/gabime/spdlog
+[submodule "PIC-DSMC-Simulation/vendor/eigen"]
+	path = PIC-DSMC-Simulation/vendor/eigen
+	url = https://gitlab.com/libeigen/eigen.git

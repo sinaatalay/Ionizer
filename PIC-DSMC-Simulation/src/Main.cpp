@@ -4,11 +4,9 @@ constexpr double pi = 3.141592653589793; //Compile time constant.
 #include <iostream>
 #include <cmath>
 
-//===Vendor======================
-#include "Core/Log.h" // Logger from https://github.com/gabime/spdlog
-
 //===Core========================
-#include "Core/Geometry.h"
+#include "Core/Log.h"
+#include "Core/IonThrusterGeometry.h"
 #include "Core/PoissonSolver.h"
 
 using namespace picdsmc;
@@ -21,19 +19,20 @@ int main() {
 	//==============================================================================
 	//==============================================================================
 	//==============================================================================
+	// Setting up the Ion Thruster Geometry:
 
 	// Try to use multiples of the relevant geometry dimensions.
 	// Otherwise the program will change the geometry accordingly.
 	double dz = 0.00002;
 	double dr = 0.00002;
-	double dtheta = pi / 12;
+	double dtheta = pi / 36;
 
-	// Physical lengths of the domain.
-	double ThetaLength = pi / 6;	// [rad] Whole azimuthal length.
+	// Physical lengths of the domain:
+	double ThetaLength = pi / 6;	// [rad] Whole azimuthal length
 	double AxialLength = 0.005;		// [m] Whole axial length.
 	double RadialLength = 0.002;	// [m] Whole radial length.
 
-	// Physical lengths of the thruster.
+	// Physical lengths of the thruster:
 	double ScreenGridWidth = 0.0004;			// [m]
 	double ScreenGridHoleRadius = 0.001;		// [m]
 
@@ -43,23 +42,13 @@ int main() {
 	double DischageRegionAxialLength = 0.001;	// [m]
 	double DistanceBetweenGrids = 0.0012;		// [m]
 
-	// Potentials
-	double V_Discharge = 2266;		 // Bulk plasma potential 
-	double V_Plume = 0;				 // Plume plasma potential
-	double V_Accel = -400;			 // Acceleration grid (second grid) potential 
-	double V_Screen = 2241;			 // Screen grid (first grid) potential
+	// Potentials:
+	double V_Discharge = 2266;		 // [V] Bulk plasma potential
+	double V_Plume = 0;				 // [V] Plume plasma potential
+	double V_Accel = -400;			 // [V] Acceleration grid (second grid) potential
+	double V_Screen = 2241;			 // [V] Screen grid (first grid) potential
 
-	// Poisson solver settings
-	int MaxIterations = 100;			// Maximum number of outer GMRES iterations to take
-	int KrylovSubspaceDimension = 850;	// Maximum number of inner GMRES iterations to take (can't be bigger than the order of the linear system)
-	double AbsoluteTolerance = 0.001;	// Absolute tolerance for GMRES
-
-	//==============================================================================
-	//==============================================================================
-	//==============================================================================
-	//==============================================================================
-
-	Geometry geometry;
+	IonThrusterGeometry geometry;
 
 	geometry.Setdz(dz);
 	geometry.Setdr(dr);
@@ -87,14 +76,13 @@ int main() {
 	//==============================================================================
 	//==============================================================================
 	//==============================================================================
+	// Setting up the poisson solver:
 
 	PoissonSolver poisson(geometry);
 
 	poisson.LogGeometry();
 
-	poisson.ConfigureMatrixA();
-	poisson.SolvePoisson(MaxIterations, KrylovSubspaceDimension, AbsoluteTolerance);
+	poisson.SolvePoisson();
 
 	LOG_INFO("Have a nice day!");
-	std::cin.get();
 }

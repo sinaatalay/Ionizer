@@ -1,44 +1,10 @@
-#include "Geometry.h"
+#include "IonThrusterGeometry.h"
 #include "Log.h"
 
 namespace picdsmc {
 
-	Geometry::Geometry() {
-		m_ThetaLength=0.0;
-		m_AxialLength=0.0;
-		m_RadialLength=0.0;
-		m_ThetaNodeCount=0;
-		m_AxialNodeCount=0;
-		m_RadialNodeCount=0;
-		m_TotalNodeCount=0;
-		m_dr=0.0;
-		m_dz=0.0;
-		m_dtheta=0.0;
-		m_ThetaBegin=0.0;
-		m_ThetaEnd=0.0;
-		m_RadialBegin=0.0;
-		m_RadialEnd=0.0;
-		m_AxialBegin=0.0;
-		m_AxialEnd=0.0;
-		m_zDischarge=0.0;
-		m_VDischarge=0.0;
-		m_zDistance=0.0;
-		m_zPlume=0.0;
-		m_VPlume=0.0;
-		m_wScreen=0.0;
-		m_rScreen=0.0;
-		m_VScreen=0.0;
-		m_wAccel=0.0;
-		m_rAccel=0.0;
-		m_VAccel=0.0;
-		m_rAccelBeginNode=0;
-		m_zAccelBeginNode=0;
-		m_zAccelEndNode=0;
-		m_rScreenBeginNode=0;
-		m_zScreenBeginNode=0;
-		m_zScreenEndNode = 0;
-	}
-	Geometry::Geometry(const Geometry& geometry) {
+	IonThrusterGeometry::IonThrusterGeometry() {}
+	IonThrusterGeometry::IonThrusterGeometry(const IonThrusterGeometry& geometry) {
 		m_dtheta = geometry.Getdtheta();
 		m_dr = geometry.Getdr();
 		m_dz = geometry.Getdz();
@@ -62,32 +28,33 @@ namespace picdsmc {
 		m_VPlume = geometry.GetVPlume();
 		GeometryCalculation();
 	}
-	Geometry::~Geometry() {}
+	IonThrusterGeometry::~IonThrusterGeometry() {}
 	//===============================================
-	void Geometry::Setdtheta(double dtheta) { m_dtheta = dtheta; }
-	void Geometry::Setdr(double dr) { m_dr = dr; }
-	void Geometry::Setdz(double dz) { m_dz = dz; }
+	void IonThrusterGeometry::Setdtheta(double dtheta) { m_dtheta = dtheta; }
+	void IonThrusterGeometry::Setdr(double dr) { m_dr = dr; }
+	void IonThrusterGeometry::Setdz(double dz) { m_dz = dz; }
 	//===============================================
-	void Geometry::SetThetaLength(double length) { m_ThetaLength = length; }
-	void Geometry::SetAxialLength(double length) { m_AxialLength = length; }
-	void Geometry::SetRadialLength(double length) { m_RadialLength = length; }
+	void IonThrusterGeometry::SetThetaLength(double length) { m_ThetaLength = length; }
+	void IonThrusterGeometry::SetAxialLength(double length) { m_AxialLength = length; }
+	void IonThrusterGeometry::SetRadialLength(double length) { m_RadialLength = length; }
 	//===============================================
-	void Geometry::SetScreenGridWidth(double length) { m_wScreen = length; }
-	void Geometry::SetScreenGridRadius(double length) { m_rScreen = length; }
-	void Geometry::SetScreenGridVoltage(double v) { m_VScreen = v; }
+	void IonThrusterGeometry::SetScreenGridWidth(double length) { m_wScreen = length; }
+	void IonThrusterGeometry::SetScreenGridRadius(double length) { m_rScreen = length; }
+	void IonThrusterGeometry::SetScreenGridVoltage(double v) { m_VScreen = v; }
 	//===============================================
-	void Geometry::SetAccelGridWidth(double length) { m_wAccel = length; }
-	void Geometry::SetAccelGridRadius(double length) { m_rAccel = length; }
-	void Geometry::SetAccelGridVoltage(double v) { m_VAccel = v; }
+	void IonThrusterGeometry::SetAccelGridWidth(double length) { m_wAccel = length; }
+	void IonThrusterGeometry::SetAccelGridRadius(double length) { m_rAccel = length; }
+	void IonThrusterGeometry::SetAccelGridVoltage(double v) { m_VAccel = v; }
 	//===============================================
-	void Geometry::SetAxialDischargeLength(double length) { m_zDischarge = length; }
-	void Geometry::SetDistanceBetweenGrids(double length) { m_zDistance = length; };
+	void IonThrusterGeometry::SetAxialDischargeLength(double length) { m_zDischarge = length; }
+	void IonThrusterGeometry::SetDistanceBetweenGrids(double length) { m_zDistance = length; };
 	//===============================================
-	void Geometry::SetVDischarge(double v) { m_VDischarge = v; }
-	void Geometry::SetVPlume(double v) { m_VPlume = v; }
+	void IonThrusterGeometry::SetVDischarge(double v) { m_VDischarge = v; }
+	void IonThrusterGeometry::SetVPlume(double v) { m_VPlume = v; }
 	//===============================================
 	//===============================================
-	void Geometry::GeometryCalculation() {
+	void IonThrusterGeometry::GeometryCalculation() {
+	// GeometryCalculation() computes the other geometry dimensions derived from the set inputs and round them according to the node lengths.
 		m_ThetaEnd = m_ThetaBegin + m_ThetaLength;
 		m_RadialEnd = m_RadialBegin + m_RadialLength;
 		m_AxialEnd = m_AxialBegin + m_AxialLength;
@@ -170,10 +137,11 @@ namespace picdsmc {
 
 		m_zPlume = m_AxialLength - (m_zDischarge + m_zDistance + m_wAccel + m_wScreen);
 	}
-	void Geometry::LogGeometry() const {
-		LOG_INFO("Whole azimuthal length: {:.5} rad", m_ThetaLength);	// [rad] Whole azimuthal length.
-		LOG_INFO("Whole axial length: {:.5} m", m_AxialLength);	// [m] Whole axial length.
-		LOG_INFO("Whole radial length: {:.5} m", m_RadialLength);  // [m] Whole radial length.
+	void IonThrusterGeometry::LogGeometry() const {
+	// LogGeometry() logs all the members to the console.
+		LOG_INFO("Whole azimuthal length: {:.5} rad", m_ThetaLength);
+		LOG_INFO("Whole axial length: {:.5} m", m_AxialLength);
+		LOG_INFO("Whole radial length: {:.5} m", m_RadialLength);
 		//===============================================
 		LOG_INFO("Theta node count: {}", m_ThetaNodeCount);
 		LOG_INFO("Axial node count: {}", m_AxialNodeCount);

@@ -5,7 +5,7 @@
 #include "SparseSystemSolver.h"
 
 
-namespace picdsmc {
+namespace Ionizer {
 
 	class PoissonSolver : public IonThrusterGeometry {
 	public:

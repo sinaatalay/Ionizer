@@ -4,7 +4,7 @@
 #include "Log.h"
 #include "Timer.h"
 
-namespace picdsmc {
+namespace Ionizer {
 
 	PoissonSolver::PoissonSolver() {}
 	PoissonSolver::PoissonSolver(const IonThrusterGeometry& geometry) {

@@ -1,24 +1,20 @@
-constexpr double pi = 3.141592653589793; //Compile time constant.
-
 //===C++ Libraries===============
 #include <iostream>
 #include <cmath>
 
 //===Core========================
-#include "Core/Log.h"
 #include "Core/IonThrusterGeometry.h"
+#include "Core/Log.h"
 #include "Core/PoissonSolver.h"
 
-using namespace picdsmc;
+using namespace Ionizer;
 
 int main() {
 	LOG_INIT(LOG_LEVEL_ALL);
 	LOG_INFO("Welcome to PIC-DSMC Simulation!");
 
-	//==============================================================================
-	//==============================================================================
-	//==============================================================================
-	//==============================================================================
+	constexpr double pi = 3.141592653589793; //Compile time constant.
+
 	// Setting up the Ion Thruster Geometry:
 
 	// Try to use multiples of the relevant geometry dimensions.
@@ -72,10 +68,6 @@ int main() {
 	geometry.SetVDischarge(V_Discharge);
 	geometry.SetVPlume(V_Plume);
 
-	//==============================================================================
-	//==============================================================================
-	//==============================================================================
-	//==============================================================================
 	// Setting up the poisson solver:
 
 	PoissonSolver poisson(geometry);

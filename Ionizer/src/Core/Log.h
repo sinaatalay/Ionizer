@@ -3,7 +3,7 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/fmt/ostr.h>
 
-namespace picdsmc{
+namespace Ionizer{
 
 	class Log {
 	public:
@@ -16,13 +16,13 @@ namespace picdsmc{
 }
 
 // Log macros:
-#define LOG_INIT(...)			::picdsmc::Log::Init(__VA_ARGS__)
+#define LOG_INIT(...)			::Ionizer::Log::Init(__VA_ARGS__)
 
-#define LOG_DEBUG(...)			::picdsmc::Log::GetLogger()->debug(__VA_ARGS__)
-#define LOG_INFO(...)			::picdsmc::Log::GetLogger()->info(__VA_ARGS__)
-#define LOG_WARN(...)			::picdsmc::Log::GetLogger()->warn(__VA_ARGS__)
-#define LOG_ERROR(...)			::picdsmc::Log::GetLogger()->error(__VA_ARGS__)
-#define LOG_CRITICAL(...)		::picdsmc::Log::GetLogger()->critical(__VA_ARGS__)
+#define LOG_DEBUG(...)			::Ionizer::Log::GetLogger()->debug(__VA_ARGS__)
+#define LOG_INFO(...)			::Ionizer::Log::GetLogger()->info(__VA_ARGS__)
+#define LOG_WARN(...)			::Ionizer::Log::GetLogger()->warn(__VA_ARGS__)
+#define LOG_ERROR(...)			::Ionizer::Log::GetLogger()->error(__VA_ARGS__)
+#define LOG_CRITICAL(...)		::Ionizer::Log::GetLogger()->critical(__VA_ARGS__)
 
 
 // Log level macros:

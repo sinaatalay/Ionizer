@@ -3,7 +3,7 @@
 #include <iostream>
 #include <chrono>
 
-namespace picdsmc {
+namespace Ionizer {
 
 	class Timer {
 	public:

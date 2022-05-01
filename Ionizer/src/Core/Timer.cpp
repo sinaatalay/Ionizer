@@ -6,7 +6,7 @@
 #include "Timer.h"
 #include "Log.h"
 
-namespace picdsmc {
+namespace Ionizer {
 
 		Timer::Timer(){
 			Reset();

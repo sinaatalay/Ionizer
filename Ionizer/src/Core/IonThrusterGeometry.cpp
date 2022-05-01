@@ -2,7 +2,7 @@
 #include "Log.h"
 #include <cmath>
 
-namespace picdsmc {
+namespace Ionizer {
 
 	IonThrusterGeometry::IonThrusterGeometry() {}
 	IonThrusterGeometry::IonThrusterGeometry(const IonThrusterGeometry& geometry) {

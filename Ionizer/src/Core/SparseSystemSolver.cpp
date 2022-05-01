@@ -6,7 +6,7 @@
 #include "Timer.h"
 
 
-namespace picdsmc {
+namespace Ionizer {
 
 	SparseSystemSolver::SparseSystemSolver() {}
 	SparseSystemSolver::~SparseSystemSolver() {}

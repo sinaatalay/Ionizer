@@ -1,6 +1,6 @@
 #pragma once
 
-namespace picdsmc {
+namespace Ionizer {
 
 	class IonThrusterGeometry {
 	public:

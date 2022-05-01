@@ -7,7 +7,7 @@
 #include <Eigen/Sparse>
 #include <Eigen/IterativeLinearSolvers>
 
-namespace picdsmc{
+namespace Ionizer{
 
 	class SparseSystemSolver{
 	public:

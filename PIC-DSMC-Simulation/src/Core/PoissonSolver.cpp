@@ -41,7 +41,7 @@ namespace picdsmc {
 		return -1;
 	}
 	void PoissonSolver::ConfigureFDSystem() {
-		enum MatrixSelection : unsigned char {
+		enum MatrixSelection : uint8_t {
 			A = 0, b = 1
 		};
 
@@ -149,9 +149,10 @@ namespace picdsmc {
 		ConfigureFDSystem();
 		LOG_INFO("Configured in {:.5} ms.", timer.ElapsedMillis());
 
+		timer.Reset();
 		m_Solver.Solve();
-
-		m_Solver.OutputSolution("Output");
 	}
-
+	void PoissonSolver::OutputSolution(const std::string& FileName){
+		m_Solver.OutputSolution(FileName);
+	}
 }

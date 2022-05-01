@@ -32,6 +32,10 @@ project "Ionizer"
 		cppdialect "C++17"
 		staticruntime "On"
 		systemversion "latest"
+		defines {
+			"ION_PLATFORM_WINDOWS",
+			"ION_BUILD_DLL"
+		}
 		
 	filter "configurations:Debug"
 		defines "ION_DEBUG"
@@ -60,18 +64,13 @@ project "Sandbox"
 		"%{prj.name}/src/**.cpp"
 	}
 	
-	includedirs {
-		"Ionizer/src"
-	}
+	includedirs "Ionizer/src"
 	
 	filter "system:windows"
 		cppdialect "C++17"
 		staticruntime "On"
 		systemversion "latest"
-		
-		defines {
-			"ION_PLATFORM_WINDOWS"
-		}
+		defines "ION_PLATFORM_WINDOWS"
 		
 	filter "configurations:Debug"
 		defines "ION_DEBUG"

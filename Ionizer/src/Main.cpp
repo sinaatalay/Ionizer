@@ -83,6 +83,9 @@ int main() {
 	poisson.LogGeometry();
 
 	poisson.SolvePoisson();
+	poisson.OutputSolution("PoissonSolution1.txt");
 
 	LOG_INFO("Have a nice day!");
+
+	std::cin.get();
 }

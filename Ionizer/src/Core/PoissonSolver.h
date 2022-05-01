@@ -1,5 +1,6 @@
 #pragma once
-#include <string>
+//C++ Libraries (Precompiled):
+#include "Ionpch.h"
 
 #include "IonThrusterGeometry.h"
 #include "SparseSystemSolver.h"

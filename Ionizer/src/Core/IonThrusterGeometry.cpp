@@ -1,6 +1,8 @@
+//C++ Libraries (Precompiled):
+#include "Ionpch.h"
+
 #include "IonThrusterGeometry.h"
 #include "Log.h"
-#include <cmath>
 
 namespace Ionizer {
 

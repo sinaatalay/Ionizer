@@ -1,8 +1,7 @@
-//===C++ Libraries===============
-#include <iostream>
-#include <cmath>
+//C++ Libraries (Precompiled):
+#include "Ionpch.h"
 
-//===Core========================
+//Core:
 #include "Core/IonThrusterGeometry.h"
 #include "Core/Log.h"
 #include "Core/PoissonSolver.h"

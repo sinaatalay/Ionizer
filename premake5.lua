@@ -18,6 +18,9 @@ project "Ionizer"
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
 	
+	pchheader "Ionpch.h"
+	pchsource "Ionizer/src/Ionpch.cpp"
+	
 	files {
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp"
@@ -25,7 +28,8 @@ project "Ionizer"
 	
 	includedirs {
 		"%{prj.name}/vendor/spdlog/include",
-		"%{prj.name}/vendor/eigen"
+		"%{prj.name}/vendor/eigen",
+		"%{prj.name}/src"
 	}
 	
 	filter "system:windows"

@@ -18,7 +18,7 @@ namespace picdsmc{
 		void SetOrder(int n);
 
 		// InsertCoefficient() inserts a coefficient to matrix A or vector b into the specified index:
-		void InsertCoefficient(unsigned char MatrixSelection, int row, int col, double value);
+		void InsertCoefficient(uint8_t MatrixSelection, int row, int col, double value);
 
 		// Solve() applies the biconjugate gradient stabilized method to the sparse linear system, Ax=b:
 		void Solve();

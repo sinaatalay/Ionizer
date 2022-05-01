@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+
 #include "IonThrusterGeometry.h"
 #include "SparseSystemSolver.h"
 
@@ -19,6 +21,9 @@ namespace picdsmc {
 
 		// SolvePoisson() solves the linear system Ax=b created with the Finite Difference Method by using SparseSystemSolver class:
 		void SolvePoisson();
+
+		// OutputSolution() outputs the solution vector x to a *.txt file.
+		void OutputSolution(const std::string& FileName);
 	private:
 		int m_n;						// The order of the linear system
 		SparseSystemSolver m_Solver;	// The sparse linear system solver

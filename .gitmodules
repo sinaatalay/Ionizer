@@ -4,3 +4,6 @@
 [submodule "PIC-DSMC-Simulation/vendor/eigen"]
 	path = Ionizer/vendor/eigen
 	url = https://gitlab.com/libeigen/eigen.git
+[submodule "Sandbox/vendor/Walnut"]
+	path = Sandbox/vendor/Walnut
+	url = https://github.com/TheCherno/Walnut

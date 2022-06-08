@@ -1,9 +1,3 @@
-[submodule "Ionizer/vendor/spdlog"]
-	path = Ionizer/vendor/spdlog
-	url = https://github.com/gabime/spdlog
-[submodule "Ionizer/vendor/eigen"]
-	path = Ionizer/vendor/eigen
-	url = https://gitlab.com/libeigen/eigen.git
 [submodule "Application/vendor/Walnut"]
 	path = Application/vendor/Walnut
 	url = https://github.com/TheCherno/Walnut

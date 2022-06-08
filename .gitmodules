@@ -1,7 +1,7 @@
-[submodule "PIC-DSMC-Simulation/vendor/spdlog"]
+[submodule "Ionizer/vendor/spdlog"]
 	path = Ionizer/vendor/spdlog
 	url = https://github.com/gabime/spdlog
-[submodule "PIC-DSMC-Simulation/vendor/eigen"]
+[submodule "Ionizer/vendor/eigen"]
 	path = Ionizer/vendor/eigen
 	url = https://gitlab.com/libeigen/eigen.git
 [submodule "Application/vendor/Walnut"]

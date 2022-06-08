@@ -1,6 +1,6 @@
 include "vendor/Walnut/WalnutExternal.lua"
 
-project "Sandbox"
+project "Application"
 	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++17"
@@ -13,6 +13,8 @@ project "Sandbox"
 	includedirs 
 	{
 		"%{wks.location}/Ionizer/src",
+		"%{wks.location}/Ionizer/vendor/spdlog/include",
+		"%{wks.location}/Ionizer/vendor/eigen",
 		"vendor/Walnut/vendor/imgui",
 		"vendor/Walnut/vendor/glfw/include",
 		"vendor/Walnut/vendor/glm",
@@ -22,7 +24,8 @@ project "Sandbox"
 	
 	links
 	{
-	   "Walnut"
+	   "Walnut",
+	   "Ionizer"
 	}
 	
 	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")

@@ -5,9 +5,9 @@ workspace "Ionizer"
 		"Release",
 		"Dist"
 	}
-	startproject "Sandbox"
+	startproject "Application"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 include "Ionizer"
-include "Sandbox"
+include "Application"

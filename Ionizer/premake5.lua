@@ -1,6 +1,5 @@
 project "Ionizer"
-	kind "ConsoleApp"
-	--kind "StaticLib"
+	kind "StaticLib"
 	language "C++"
 	cppdialect "C++17"
 	openmp "On"
@@ -12,8 +11,8 @@ project "Ionizer"
 	pchsource "src/Ionpch.cpp"
 	
 	files {
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"src/**.h",
+		"src/**.cpp"
 	}
 	
 	includedirs {

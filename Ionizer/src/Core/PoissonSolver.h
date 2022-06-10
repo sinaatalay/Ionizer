@@ -25,6 +25,9 @@ namespace Ionizer {
 
 		// OutputSolution() outputs the solution vector x to a *.txt file.
 		void OutputSolution(const std::string& FileName);
+
+		// GetImage() returns an image of the solution as a std::vector<double>.
+		std::vector<uint32_t> GetImage(uint32_t ViewportWidth, uint32_t ViewportHeight);
 	private:
 		int m_n;						// The order of the linear system
 		SparseSystemSolver m_Solver;	// The sparse linear system solver

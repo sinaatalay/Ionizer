@@ -68,9 +68,6 @@ namespace Ionizer {
 	}
 	PoissonSolver::~PoissonSolver() {}
 
-	double PoissonSolver::Normalizer(int i){
-		return -1;
-	}
 	void PoissonSolver::ConfigureFDSystem() {
 		enum MatrixSelection : uint8_t {
 			A = 0, b = 1
@@ -98,7 +95,7 @@ namespace Ionizer {
 						m_Solver.InsertCoefficient(A, row, row, 1);
 						m_Solver.InsertCoefficient(b, row, row, m_VPlume);
 					}
-					else if (k >= m_zScreenBeginNode && k <= m_zScreenEndNode && i>=m_rScreenBeginNode) {
+					else if (k >= m_zScreenBeginNode && k <= m_zScreenEndNode && i >= m_rScreenBeginNode) {
 						// Screen Grid:
 						m_Solver.InsertCoefficient(A, row, row, 1);
 						m_Solver.InsertCoefficient(b, row, row, m_VScreen);
@@ -110,7 +107,7 @@ namespace Ionizer {
 					}
 					else if (i == 0) {
 						// r = 0 surface:
-						m_Solver.InsertCoefficient(A, row, row+step_i, 1);
+						m_Solver.InsertCoefficient(A, row, row + step_i, 1);
 						m_Solver.InsertCoefficient(A, row, row, -1);
 					}
 					else if (i == m_RadialNodeCount - 1) {
@@ -128,7 +125,7 @@ namespace Ionizer {
 						m_Solver.InsertCoefficient(A, row, row - step_j, -1);
 						m_Solver.InsertCoefficient(A, row, row, 1);
 					}
-					else{
+					else {
 						// Interior region:
 						double r = m_RadialBegin + i * m_dr;
 
@@ -140,15 +137,15 @@ namespace Ionizer {
 						double ip1 = 1.0 / (m_dr * m_dr) + 1.0 / (r * 2.0 * m_dr);										// U_{i+1,	j,		k}
 						double jp1 = jm1;																				// U_{i,	j+1,	k}
 
-						double InvMagnitude = 1/std::sqrt(jm1 * jm1 + im1 * im1 + km1 * km1 + ijk * ijk + kp1 * kp1 + ip1 * ip1 + jp1 * jp1);
+						double InvMagnitude = 1 / std::sqrt(jm1 * jm1 + im1 * im1 + km1 * km1 + ijk * ijk + kp1 * kp1 + ip1 * ip1 + jp1 * jp1);
 
-						jm1 = jm1*InvMagnitude;
-						im1 = im1*InvMagnitude;
-						km1 = km1*InvMagnitude;
-						ijk = ijk*InvMagnitude;
-						kp1 = kp1*InvMagnitude;
-						ip1 = ip1*InvMagnitude;
-						jp1 = jp1*InvMagnitude;
+						jm1 = jm1 * InvMagnitude;
+						im1 = im1 * InvMagnitude;
+						km1 = km1 * InvMagnitude;
+						ijk = ijk * InvMagnitude;
+						kp1 = kp1 * InvMagnitude;
+						ip1 = ip1 * InvMagnitude;
+						jp1 = jp1 * InvMagnitude;
 
 						int col = row - step_j;
 						m_Solver.InsertCoefficient(A, row, col, jm1);
@@ -174,6 +171,7 @@ namespace Ionizer {
 			}
 		}
 	}
+
 	void PoissonSolver::SolvePoisson() {
 		LOG_INFO("Configuring Finite Difference Method's linear system.");
 		Timer timer;
@@ -183,7 +181,34 @@ namespace Ionizer {
 		timer.Reset();
 		m_Solver.Solve();
 	}
-	void PoissonSolver::OutputSolution(const std::string& FileName){
+
+	void PoissonSolver::OutputSolution(const std::string& FileName) {
 		m_Solver.OutputSolution(FileName);
+	}
+
+	std::vector<uint32_t> PoissonSolver::GetImage(uint32_t ViewportWidth, uint32_t ViewportHeight) {
+		std::vector<double> solution = m_Solver.GetSolution();
+		int step_j = m_RadialNodeCount * m_AxialNodeCount;
+		double theta = 0;
+		int ThetaNode = (theta / m_dtheta + 0.5) + 1;
+		solution.erase(solution.begin(), solution.begin() + step_j * (ThetaNode - 1));
+		solution.erase(solution.end() - step_j * (m_ThetaNodeCount - ThetaNode), solution.end());
+
+		std::vector<uint32_t> Image;
+		Image.resize(ViewportHeight * ViewportWidth);
+
+		for (int i = 0; i < step_j; i++) {
+			solution[i] = (solution[i]+401) / (m_VScreen-m_VAccel+1);
+		}
+
+		uint32_t width, height;
+		int red;
+
+		for (int i = 0; i < step_j; i++) {
+			red = 250*solution[i];
+			Image[i*(ViewportWidth * ViewportHeight)/(m_RadialNodeCount * m_AxialNodeCount)] = ((red & 0xff) << 24) + ((0 & 0xff) << 16) + ((0 & 0xff) << 8) + (255 & 0xff);
+		}
+
+		return Image;
 	}
 }

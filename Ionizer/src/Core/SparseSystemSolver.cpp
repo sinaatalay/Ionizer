@@ -30,6 +30,7 @@ namespace Ionizer {
 		}
 
 	}
+
 	void SparseSystemSolver::Solve() {
 		m_A.setFromTriplets(m_coefficients.begin(), m_coefficients.end());	 // Fill the sparse matrix.
 		m_A.makeCompressed();
@@ -53,6 +54,7 @@ namespace Ionizer {
 			LOG_INFO("Estimated error: {:.5}", solver.error());
 		}
 	}
+
 	void SparseSystemSolver::OutputSolution(const std::string& FileName) {
 		std::ofstream file;
 		if (FileName.find(".txt") == std::string::npos) {
@@ -68,4 +70,12 @@ namespace Ionizer {
 		file.close();
 	}
 
+	std::vector<double> SparseSystemSolver::GetSolution() {
+		std::vector<double> result;
+		result.resize(m_n);
+		for (int i = 0; i < m_n; i++) {
+			result[i] = m_x[i];
+		}
+		return result;
+	}
 }

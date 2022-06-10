@@ -76,6 +76,8 @@ int main() {
 	poisson.SolvePoisson();
 	poisson.OutputSolution("PoissonSolution1.txt");
 
+	//std::vector<double> hop = poisson.GetImage();
+
 	LOG_INFO("Have a nice day!");
 
 	std::cin.get();

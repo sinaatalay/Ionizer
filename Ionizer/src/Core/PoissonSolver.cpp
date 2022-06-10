@@ -189,26 +189,58 @@ namespace Ionizer {
 	std::vector<uint32_t> PoissonSolver::GetImage(uint32_t ViewportWidth, uint32_t ViewportHeight) {
 		std::vector<double> solution = m_Solver.GetSolution();
 		int step_j = m_RadialNodeCount * m_AxialNodeCount;
+
 		double theta = 0;
 		int ThetaNode = (theta / m_dtheta + 0.5) + 1;
 		solution.erase(solution.begin(), solution.begin() + step_j * (ThetaNode - 1));
 		solution.erase(solution.end() - step_j * (m_ThetaNodeCount - ThetaNode), solution.end());
 
+
 		std::vector<uint32_t> Image;
-		Image.resize(ViewportHeight * ViewportWidth);
+		Image.resize(step_j);
 
-		for (int i = 0; i < step_j; i++) {
-			solution[i] = (solution[i]+401) / (m_VScreen-m_VAccel+1);
-		}
-
-		uint32_t width, height;
 		int red;
 
-		for (int i = 0; i < step_j; i++) {
-			red = 250*solution[i];
-			Image[i*(ViewportWidth * ViewportHeight)/(m_RadialNodeCount * m_AxialNodeCount)] = ((red & 0xff) << 24) + ((0 & 0xff) << 16) + ((0 & 0xff) << 8) + (255 & 0xff);
+		for (int height = 0; height < m_RadialNodeCount; height++) {
+			for (int width = 0; width < m_AxialNodeCount; width++) {
+				int heightSol = m_RadialNodeCount - height - 1;
+				int widthSol = width;
+				double a = solution[heightSol * m_AxialNodeCount + widthSol];
+				double b = m_VAccel;
+				double epsilon = std::pow(10, -6);
+				bool test1 = fabs(a - b) <= ((fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * epsilon);
+				b = m_VScreen;
+				bool test2 = fabs(a - b) <= ((fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * epsilon);
+				if (test1 || test2) {
+					Image[width + height * m_AxialNodeCount] = 0xff575757;
+				}
+				else {
+					red = (a + 405) / (m_VDischarge - m_VAccel + 10) * 255;
+					Image[width + height * m_AxialNodeCount] = (red << 24) + ((0 & 0xff) << 16) + ((0 & 0xff) << 8) + (255 & 0xff);
+				}
+			}
 		}
 
-		return Image;
+		std::vector<uint32_t> ImageFinal;
+		double ratio = ViewportWidth / (double)m_AxialNodeCount;
+		uint32_t HeightFinal= m_RadialNodeCount * ratio;
+		ImageFinal.resize(ViewportWidth * ViewportHeight);
+
+		for (int height = 0; height < ViewportHeight; height++) {
+			for (int width = 0; width < ViewportWidth; width++) {
+				if (width / ratio + height / ratio * m_AxialNodeCount > 25350) {
+					int a = 5;
+				}
+				if (height < HeightFinal) {
+					ImageFinal[width + height * ViewportWidth] = Image[ (int)(width / ratio) + (int)(height / ratio) * m_AxialNodeCount];
+				}
+				else {
+					ImageFinal[width + height * ViewportWidth] = 0x00000000;
+				}
+
+			}
+		}
+
+		return ImageFinal;
 	}
 }

@@ -27,7 +27,7 @@ public:
 
 	void Render() {
 
-		if (m_Image == nullptr || m_ViewportWidth != m_Image->GetWidth() || m_ViewportHeight != m_Image->GetHeight()) {
+		if (m_Image == nullptr || m_ViewportWidth != m_Image->GetWidth()) {
 			m_Image = std::make_shared<Walnut::Image>(m_ViewportWidth, m_ViewportHeight, Walnut::ImageFormat::RGBA);
 			delete[] m_ImageData;
 			m_ImageData = new uint32_t[m_ViewportWidth * m_ViewportHeight];
@@ -35,11 +35,12 @@ public:
 
 #if 1
 		Ionizer::PoissonSolver poisson;
+		poisson.LogGeometry();
 		poisson.SolvePoisson();
 
 		std::vector<uint32_t> hop = poisson.GetImage(m_ViewportWidth, m_ViewportHeight);
 
-		for (uint32_t i = 0; i < m_ViewportWidth * m_ViewportHeight; i++) {
+		for (uint32_t i = 0; i < m_ViewportWidth*m_ViewportHeight; i++) {
 			m_ImageData[i] = hop[i];
 		}
 #else

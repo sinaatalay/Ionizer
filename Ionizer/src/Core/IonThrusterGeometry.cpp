@@ -24,8 +24,8 @@ namespace Ionizer {
 		m_rAccel = geometry.GetrAccel();
 		m_VAccel = geometry.GetVAccel();
 
-		m_zDischarge = geometry.GetzDischarge();
-		m_zDistance = geometry.GetzDistance();
+		m_AxialDischargeLength = geometry.GetzDischarge();
+		m_AxialDistanceBetweenGrids = geometry.GetzDistance();
 
 		m_VDischarge = geometry.GetVDischarge();
 		m_VPlume = geometry.GetVPlume();
@@ -49,8 +49,8 @@ namespace Ionizer {
 	void IonThrusterGeometry::SetAccelGridRadius(double length) { m_rAccel = length; }
 	void IonThrusterGeometry::SetAccelGridVoltage(double v) { m_VAccel = v; }
 
-	void IonThrusterGeometry::SetAxialDischargeLength(double length) { m_zDischarge = length; }
-	void IonThrusterGeometry::SetDistanceBetweenGrids(double length) { m_zDistance = length; };
+	void IonThrusterGeometry::SetAxialDischargeLength(double length) { m_AxialDischargeLength = length; }
+	void IonThrusterGeometry::SetDistanceBetweenGrids(double length) { m_AxialDistanceBetweenGrids = length; };
 
 	void IonThrusterGeometry::SetVDischarge(double v) { m_VDischarge = v; }
 	void IonThrusterGeometry::SetVPlume(double v) { m_VPlume = v; }
@@ -108,35 +108,35 @@ namespace Ionizer {
 		//===============================================
 		//===============================================
 		// FIXING AXIAL PROBLEMS:
-		m_zScreenBeginNode = (int)((m_zDischarge) / m_dz + 0.5);
+		m_zScreenBeginNode = (int)((m_AxialDischargeLength) / m_dz + 0.5);
 		a = m_zScreenBeginNode * m_dz;
-		if (fabs(a - m_zDischarge) > epsilon) {
-			LOG_WARN("(NODE COUNT PROBLEM) Axial length of discharge region has changed from {:.8} m to {:.8} m", m_zDischarge, a);
-			m_zDischarge = a;
+		if (fabs(a - m_AxialDischargeLength) > epsilon) {
+			LOG_WARN("(NODE COUNT PROBLEM) Axial length of discharge region has changed from {:.8} m to {:.8} m", m_AxialDischargeLength, a);
+			m_AxialDischargeLength = a;
 		}
 
-		m_zScreenEndNode = (int)((m_zDischarge + m_wScreen) / m_dz + 0.5);
+		m_zScreenEndNode = (int)((m_AxialDischargeLength + m_wScreen) / m_dz + 0.5);
 		a = (m_zScreenEndNode - m_zScreenBeginNode) * m_dz;
 		if (fabs(a - m_wScreen) > epsilon) {
 			LOG_WARN("(NODE COUNT PROBLEM) Width of the screen grid has changed from {:.8} m to {:.8} m", m_wScreen, a);
 			m_wScreen = a;
 		}
 
-		m_zAccelBeginNode = (int)((m_zDischarge + m_wScreen + m_zDistance) / m_dz + 0.5);
+		m_zAccelBeginNode = (int)((m_AxialDischargeLength + m_wScreen + m_AxialDistanceBetweenGrids) / m_dz + 0.5);
 		a = (m_zAccelBeginNode - m_zScreenEndNode) * m_dz;
-		if ((a - m_zDistance) > epsilon) {
-			LOG_WARN("(NODE COUNT PROBLEM) The distance between the grids has changed from {:.8} m to {:.8} m", m_zDistance, a);
-			m_zDistance = a;
+		if ((a - m_AxialDistanceBetweenGrids) > epsilon) {
+			LOG_WARN("(NODE COUNT PROBLEM) The distance between the grids has changed from {:.8} m to {:.8} m", m_AxialDistanceBetweenGrids, a);
+			m_AxialDistanceBetweenGrids = a;
 		}
 
-		m_zAccelEndNode = (int)((m_zDischarge + m_wScreen + m_zDistance + m_wAccel) / m_dz + 0.5);
+		m_zAccelEndNode = (int)((m_AxialDischargeLength + m_wScreen + m_AxialDistanceBetweenGrids + m_wAccel) / m_dz + 0.5);
 		a = (m_zAccelEndNode - m_zAccelBeginNode) * m_dz;
 		if ((a - m_wAccel) > epsilon) {
 			LOG_WARN("(NODE COUNT PROBLEM) Width of the acceleration grid has changed from {:.8} m to {:.8} m", m_wAccel, a);
 			m_wAccel = a;
 		}
 
-		m_zPlume = m_AxialLength - (m_zDischarge + m_zDistance + m_wAccel + m_wScreen);
+		m_zPlume = m_AxialLength - (m_AxialDischargeLength + m_AxialDistanceBetweenGrids + m_wAccel + m_wScreen);
 	}
 	void IonThrusterGeometry::LogGeometry() const {
 		LOG_INFO("Whole azimuthal length: {:.5} rad", m_ThetaLength);
@@ -159,9 +159,9 @@ namespace Ionizer {
 		LOG_INFO("Beginning of the axial domain: {:.5} m", m_AxialBegin);
 		LOG_INFO("End of the axial domain: {:.5} m", m_AxialEnd);
 		//===============================================
-		LOG_INFO("Portion of the domain up to the screen grid: {:.5} m", m_zDischarge);
+		LOG_INFO("Portion of the domain up to the screen grid: {:.5} m", m_AxialDischargeLength);
 		LOG_INFO("Voltage of the discharge: {:.5} V", m_VDischarge);
-		LOG_INFO("Distance betweeen the screen and accel grid: {:.5} m", m_zDistance);
+		LOG_INFO("Distance betweeen the screen and accel grid: {:.5} m", m_AxialDistanceBetweenGrids);
 		LOG_INFO("Portion of the domain that remains in the plume region: {:.5} m", m_zPlume);
 		LOG_INFO("Voltage of the plume: {:.5} V", m_VPlume);
 		//===============================================

@@ -50,8 +50,8 @@ namespace Ionizer {
 		double GetAxialBegin() const { return m_AxialBegin; }
 		double GetAxialEnd() const { return m_AxialEnd; }
 
-		double GetzDischarge() const { return m_zDischarge; }
-		double GetzDistance() const { return m_zDistance; }
+		double GetzDischarge() const { return m_AxialDischargeLength; }
+		double GetzDistance() const { return m_AxialDistanceBetweenGrids; }
 		double GetzPlume() const { return m_zPlume; }
 
 		double GetwScreen() const { return m_wScreen; }
@@ -97,9 +97,9 @@ namespace Ionizer {
 		double m_AxialBegin;	// [m] Beginning of the axial domain
 		double m_AxialEnd;		// [m] End of the axial domain
 
-		double m_zDischarge;	// [m] Portion of the domain up to the screen grid
+		double m_AxialDischargeLength;	// [m] Portion of the domain up to the screen grid
 		double m_VDischarge;	// [V] Voltage of the discharge
-		double m_zDistance;		// [m] Distance betweeen the screen and accel grid
+		double m_AxialDistanceBetweenGrids;		// [m] Distance betweeen the screen and accel grid
 		double m_zPlume;		// [m] Portion of the domain that remains in the plume region, space region
 		double m_VPlume;		// [V] Voltage of the plume
 

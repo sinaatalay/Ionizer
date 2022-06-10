@@ -7,7 +7,37 @@
 
 namespace Ionizer {
 
-	PoissonSolver::PoissonSolver() {}
+	PoissonSolver::PoissonSolver() {
+		// Setting up the Ion Thruster Geometry:
+		double pi = 3.141592653589793;
+		m_dtheta = pi / 36;
+		m_dr = 0.00002;
+		m_dz = 0.00002;
+
+		// Physical lengths of the domain:
+		m_ThetaLength = pi / 6;	   // [rad] Whole azimuthal length
+		m_RadialLength = 0.002;	   // [m] Whole axial length.
+		m_AxialLength = 0.005;	   // [m] Whole radial length.
+
+		// Physical lengths of the thruster:
+		m_wScreen = 0.0004;						 // [m]
+		m_rScreen = 0.001;						 // [m]
+		m_wAccel = 0.0008;						 // [m]
+		m_rAccel = 0.0006;						 // [m]
+		m_AxialDischargeLength = 0.001;			 // [m]
+		m_AxialDistanceBetweenGrids = 0.0012;	 // [m]
+
+		// Potentials:
+		m_VDischarge = 2266;	// [V] Bulk plasma potential
+		m_VPlume = 0;			// [V] Plume plasma potential
+		m_VAccel = -400;		// [V] Acceleration grid (second grid) 
+		m_VScreen = 2241;		// [V] Screen grid (first grid) potential
+
+		GeometryCalculation();
+
+		m_n = m_TotalNodeCount;
+		m_Solver.SetOrder(m_n);
+	}
 	PoissonSolver::PoissonSolver(const IonThrusterGeometry& geometry) {
 		m_dtheta = geometry.Getdtheta();
 		m_dr = geometry.Getdr();
@@ -25,8 +55,8 @@ namespace Ionizer {
 		m_rAccel = geometry.GetrAccel();
 		m_VAccel = geometry.GetVAccel();
 
-		m_zDischarge = geometry.GetzDischarge();
-		m_zDistance = geometry.GetzDistance();
+		m_AxialDischargeLength = geometry.GetzDischarge();
+		m_AxialDistanceBetweenGrids = geometry.GetzDistance();
 
 		m_VDischarge = geometry.GetVDischarge();
 		m_VPlume = geometry.GetVPlume();

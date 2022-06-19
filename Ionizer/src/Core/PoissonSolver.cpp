@@ -186,12 +186,16 @@ namespace Ionizer {
 		m_Solver.OutputSolution(FileName);
 	}
 
-	std::vector<uint32_t> PoissonSolver::GetImage(uint32_t ViewportWidth, uint32_t ViewportHeight) {
+	std::vector<uint32_t> PoissonSolver::GetImage(uint32_t ViewportWidth, uint32_t ViewportHeight, float angle) {
 		std::vector<double> solution = m_Solver.GetSolution();
 		int step_j = m_RadialNodeCount * m_AxialNodeCount;
 
-		double theta = 0;
-		int ThetaNode = (theta / m_dtheta + 0.5) + 1;
+		LOG_DEBUG("THETA IS {:.5}", angle);
+
+		angle = angle / 360 * 2 * 3.141592653589793;
+
+		int ThetaNode = (int)(angle / m_dtheta + 0.5) + 1;
+		LOG_DEBUG("THETA NODE IS {}", ThetaNode);
 		solution.erase(solution.begin(), solution.begin() + step_j * (ThetaNode - 1));
 		solution.erase(solution.end() - step_j * (m_ThetaNodeCount - ThetaNode), solution.end());
 
@@ -223,21 +227,17 @@ namespace Ionizer {
 
 		std::vector<uint32_t> ImageFinal;
 		double ratio = ViewportWidth / (double)m_AxialNodeCount;
-		uint32_t HeightFinal= m_RadialNodeCount * ratio;
+		uint32_t SolutionHeight = m_RadialNodeCount * ratio, GapHeight = (ViewportHeight - SolutionHeight) / 2;
 		ImageFinal.resize(ViewportWidth * ViewportHeight);
 
 		for (int height = 0; height < ViewportHeight; height++) {
 			for (int width = 0; width < ViewportWidth; width++) {
-				if (width / ratio + height / ratio * m_AxialNodeCount > 25350) {
-					int a = 5;
-				}
-				if (height < HeightFinal) {
-					ImageFinal[width + height * ViewportWidth] = Image[ (int)(width / ratio) + (int)(height / ratio) * m_AxialNodeCount];
+				if (height > GapHeight && height < ViewportHeight - GapHeight) {
+					ImageFinal[width + height * ViewportWidth] = Image[(int)(width / ratio) + (int)((height - GapHeight) / ratio) * m_AxialNodeCount];
 				}
 				else {
 					ImageFinal[width + height * ViewportWidth] = 0x00000000;
 				}
-
 			}
 		}
 

@@ -24,7 +24,7 @@ namespace Ionizer {
 		void OutputSolution(const std::string& FileName);
 
 		// GetImage() returns an image of the solution as a std::vector<double>.
-		std::vector<uint32_t> GetImage(uint32_t ViewportWidth, uint32_t ViewportHeight);
+		std::vector<uint32_t> GetImage(uint32_t ViewportWidth, uint32_t ViewportHeight, float angle);
 	private:
 		int m_n;						// The order of the linear system
 		SparseSystemSolver m_Solver;	// The sparse linear system solver

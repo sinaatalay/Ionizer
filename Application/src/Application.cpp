@@ -7,12 +7,15 @@ class ExampleLayer : public Walnut::Layer {
 public:
 	virtual void OnUIRender() override {
 		ImGui::Begin("Settings");
+		static float angle= 0.0f;
+		ImGui::SliderFloat(" ", &angle, 0.0f, 30.0f, "Solution at theta = %.3f");
 		if (ImGui::Button("Solve Poisson")) {
-			Render();
+			Render(angle);
 		}
 		ImGui::End();
 
-		// ImGui::ShowDemoWindow();
+		//ImGui::ShowDemoWindow();
+
 		ImGui::Begin("Viewport");
 
 		m_ViewportWidth = ImGui::GetContentRegionAvail().x;
@@ -25,7 +28,7 @@ public:
 		ImGui::End();
 	}
 
-	void Render() {
+	void Render(float angle) {
 
 		if (m_Image == nullptr || m_ViewportWidth != m_Image->GetWidth()) {
 			m_Image = std::make_shared<Walnut::Image>(m_ViewportWidth, m_ViewportHeight, Walnut::ImageFormat::RGBA);
@@ -33,26 +36,16 @@ public:
 			m_ImageData = new uint32_t[m_ViewportWidth * m_ViewportHeight];
 		}
 
-#if 1
 		Ionizer::PoissonSolver poisson;
 		poisson.LogGeometry();
 		poisson.SolvePoisson();
 
-		std::vector<uint32_t> hop = poisson.GetImage(m_ViewportWidth, m_ViewportHeight);
+		std::vector<uint32_t> hop = poisson.GetImage(m_ViewportWidth, m_ViewportHeight, angle);
 
 		for (uint32_t i = 0; i < m_ViewportWidth*m_ViewportHeight; i++) {
 			m_ImageData[i] = hop[i];
 		}
-#else
-		for (uint32_t i = 0; i < m_ViewportWidth * m_ViewportHeight; i++) {
-			if(i<20*m_ViewportWidth){
-				m_ImageData[i] = 0xff0000ff;
-			}
-			else {
-				m_ImageData[i] = 0xff000000;
-			}
-		}
-#endif
+
 		m_Image->SetData(m_ImageData);
 	}
 private:

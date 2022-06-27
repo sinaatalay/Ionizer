@@ -3,7 +3,8 @@
 /bin/
 /bin-int/
 
-# Files
+# Files and folders
+*.vs/
 *.user
 *.sln
 *.vcxproj

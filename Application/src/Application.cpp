@@ -3,9 +3,9 @@
 #include "Walnut/EntryPoint.h"
 #include "Walnut/Image.h"
 
-static void HelpMarker(const char* desc)
+static void NoteMarker(const char* desc)
 {
-	ImGui::TextDisabled("(?)");
+	ImGui::TextDisabled("(*)");
 	if (ImGui::IsItemHovered())
 	{
 		ImGui::BeginTooltip();
@@ -19,22 +19,37 @@ static void HelpMarker(const char* desc)
 class IonizerLayer : public Walnut::Layer {
 public:
 	virtual void OnUIRender() override {
-		ImGui::Begin("Settings");
+		ImGui::Begin("Menu");
 		ImGui::Text("Welcome to Ionizer!");
-		if (ImGui::CollapsingHeader("Ion Thruster Geometry"))
+
+		static float angle = 0.0f;
+		ImGui::SliderFloat(" ", &angle, 0.0f, 30.0f, "Solution at theta = %.3f");
+		if (ImGui::Button("Solve Poisson")) {
+			Render(angle);
+		}
+
+		ImGui::Separator();
+
+		if (ImGui::CollapsingHeader("Configuration"))
 		{
 			ImGui::LabelText("Label", "Value");
 			ImGui::Text("Physical lengths of the nodes:");
 			static double dz = 0.00002;
-			ImGui::InputDouble("dz [m]", &dz, 0.000002f, 0.0005f, "%.4f");HelpMarker("Try to use multiples of the relevant geometry dimensions.\n"
+			ImGui::InputDouble("dz [m]", &dz, 0.000002f, 0.0005f, "%.4f");
+			ImGui::SameLine;
+			NoteMarker("Try to use multiples of the relevant geometry dimensions.\n"
 				"Otherwise the program will change the geometry accordingly");
 
 			static double dr = 0.00002;
-			ImGui::InputDouble("dr [m]", &dr, 0.000002f, 0.0005f, "%.4f");HelpMarker("Try to use multiples of the relevant geometry dimensions.\n"
+			ImGui::InputDouble("dr [m]", &dr, 0.000002f, 0.0005f, "%.4f");
+			ImGui::SameLine;
+			NoteMarker("Try to use multiples of the relevant geometry dimensions.\n"
 				"Otherwise the program will change the geometry accordingly");
 
 			static double dtheta = 5;
-			ImGui::InputDouble("dtheta [deg]", &dtheta, 0.1, 10, "%.4f");HelpMarker("Try to use multiples of the relevant geometry dimensions.\n"
+			ImGui::InputDouble("dtheta [deg]", &dtheta, 0.1, 10, "%.4f");
+			ImGui::SameLine;
+			NoteMarker("Try to use multiples of the relevant geometry dimensions.\n"
 				"Otherwise the program will change the geometry accordingly");
 			dtheta = 3.141592653589793 * 2 * dtheta / 360;
 
@@ -103,15 +118,10 @@ public:
 			geometry.SetVDischarge(V_Discharge);
 			geometry.SetVPlume(V_Plume);
 		}
-		ImGui::Separator();
-		static float angle= 0.0f;
-		ImGui::SliderFloat(" ", &angle, 0.0f, 30.0f, "Solution at theta = %.3f");
-		if (ImGui::Button("Solve Poisson")) {
-			Render(angle);
-		}
+
 		ImGui::End();
 
-		ImGui::ShowDemoWindow();
+		//ImGui::ShowDemoWindow();
 
 		ImGui::Begin("Viewport");
 

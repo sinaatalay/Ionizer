@@ -2,6 +2,9 @@
 #include "Walnut/Application.h"
 #include "Walnut/EntryPoint.h"
 #include "Walnut/Image.h"
+#include "Walnut/Timer.h"
+
+#include "Renderer.h"
 
 static void NoteMarker(const char* desc)
 {
@@ -30,137 +33,106 @@ public:
 
 		ImGui::Separator();
 
-		if (ImGui::CollapsingHeader("Configuration"))
-		{
-			ImGui::LabelText("Label", "Value");
-			ImGui::Text("Physical lengths of the nodes:");
-			static double dz = 0.00002;
-			ImGui::InputDouble("dz [m]", &dz, 0.000002f, 0.0005f, "%.4f");
-			ImGui::SameLine;
-			NoteMarker("Try to use multiples of the relevant geometry dimensions.\n"
-				"Otherwise the program will change the geometry accordingly");
+		if (ImGui::CollapsingHeader("Configuration")) {
+            if (ImGui::TreeNode("Step sizes")) {
+				ImGui::LabelText("Label", "Value");
+				static double dz = 0.00002;
+				ImGui::InputDouble("dz", &dz, 0.00002, 0.0001, "%.5f");
+				static double dr = 0.00002;
+				ImGui::InputDouble("dr", &dr, 0.00002, 0.0001, "%.5f");
+				static double dtheta = 5;
+				ImGui::InputDouble("dtheta [deg]", &dtheta, 1, 5, "%.5f");
+                ImGui::TreePop();
+            }
 
-			static double dr = 0.00002;
-			ImGui::InputDouble("dr [m]", &dr, 0.000002f, 0.0005f, "%.4f");
-			ImGui::SameLine;
-			NoteMarker("Try to use multiples of the relevant geometry dimensions.\n"
-				"Otherwise the program will change the geometry accordingly");
+			if (ImGui::TreeNode("Lengths of the domain")){
+				ImGui::Text("Try to use multiples of the step sizes. Otherwise the program will change the geometry accordingly.");
+				ImGui::LabelText("Label", "Value");
+				static double ThetaLength = 30;
+				ImGui::InputDouble("theta length [deg]", &ThetaLength, 1, 5, "%.4f");
 
-			static double dtheta = 5;
-			ImGui::InputDouble("dtheta [deg]", &dtheta, 0.1, 10, "%.4f");
-			ImGui::SameLine;
-			NoteMarker("Try to use multiples of the relevant geometry dimensions.\n"
-				"Otherwise the program will change the geometry accordingly");
-			dtheta = 3.141592653589793 * 2 * dtheta / 360;
+				static double RadialLength = 0.002;
+				ImGui::InputDouble("radial length", &RadialLength, 0.002, 0.01, "%.4f");
 
-			ImGui::Text("Physical lengths of the domain:");
-			static double ThetaLength = 30;
-			ImGui::InputDouble("theta length [deg]", &ThetaLength, 10.0f, 60.0f, "%.4f");
-			ThetaLength = 3.141592653589793 * 2 * ThetaLength / 360;
+				static double AxialLength = 0.002;
+				ImGui::InputDouble("axial length", &AxialLength, 0.002, 0.01, "%.4f");
+				ImGui::TreePop();
+			}
 
-			static double RadialLength = 0.002;
-			ImGui::InputDouble("radial length [m]", &RadialLength, 0.001f, 0.005f, "%.4f");
+			if (ImGui::TreeNode("Lengths of the thruster")){
+				ImGui::LabelText("Label", "Value");
+				static double ScreenGridWidth = 0.0004;
+				ImGui::InputDouble("screen grid width [m]", &ScreenGridWidth, 0.0001, 0.002, "%.4f");
 
-			static double AxialLength = 0.002;
-			ImGui::InputDouble("axial length [m]", &AxialLength, 0.001f, 0.005f, "%.4f");
+				static double ScreenGridHoleRadius = 0.001;
+				ImGui::InputDouble("screen grid hole radius [m]", &ScreenGridHoleRadius, 0.001, 0.05, "%.4f");
 
-			ImGui::Text("Physical lengths of the thruster:");
-			static double ScreenGridWidth = 0.0004;
-			ImGui::InputDouble("screen grid width [m]", &ScreenGridWidth, 0.0001f, 0.001f, "%.4f");
+				static double AccelerationGridWidth = 0.0008;
+				ImGui::InputDouble("acceleration grid width [m]", &AccelerationGridWidth, 0.001, 0.004, "%.4f");
 
-			static double ScreenGridHoleRadius = 0.001;
-			ImGui::InputDouble("screen grid hole radius [m]", &ScreenGridHoleRadius, 0.0001f, 0.004f, "%.4f");
+				static double AccelerationGridHoleRadius = 0.0006;
+				ImGui::InputDouble("acceleration grid hole radius [m]", &AccelerationGridHoleRadius, 0.0001, 0.004, "%.4f");
 
-			static double AccelerationGridWidth = 0.0008;
-			ImGui::InputDouble("acceleration grid width [m]", &AccelerationGridWidth, 0.0001f, 0.0015f, "%.4f");
+				static double DischargeRegionAxialLength = 0.001;
+				ImGui::InputDouble("discharge region axial length [m]", &DischargeRegionAxialLength, 0.001, 0.005, "%.4f");
 
-			static double AccelerationGridHoleRadius = 0.0006;
-			ImGui::InputDouble("acceleration grid hole radius [m]", &AccelerationGridHoleRadius, 0.0001f, 0.001f, "%.4f");
+				static double DistanceBetweenGrids = 0.0012;
+				ImGui::InputDouble("distance between grids [m]", &DistanceBetweenGrids, 0.0001, 0.0005, "%.4f");
+				ImGui::TreePop();
+			}
 
-			static double DischageRegionAxialLength = 0.001;
-			ImGui::InputDouble("dischage region axial length [m]", &DischageRegionAxialLength, 0.0001f, 0.002f, "%.4f");
+			if (ImGui::TreeNode("Potentials")) {
+				ImGui::LabelText("Label", "Value");
+				static double V_Discharge = 2266;
+				ImGui::InputDouble("bulk plasma potential [V]", &V_Discharge, 10, 50, "%.4f");
 
-			static double DistanceBetweenGrids = 0.0012;
-			ImGui::InputDouble("distance between grids [m]", &DistanceBetweenGrids, 0.0003f, 0.002f, "%.4f");
+				static double V_Plume = 0;
+				ImGui::InputDouble("plume plasma potential [V]", &V_Plume, 10, 50, "%.4f");
 
-			ImGui::Text("Potentials:");
-			static double V_Discharge = 2266;
-			ImGui::InputDouble("bulk plasma potential [V]", &V_Discharge, 1.0f, 4000.0f, "%.4f");
+				static double V_Accel = -400;
+				ImGui::InputDouble("Acceleration grid (second grid) potential [V]", &V_Accel, 10, 50, "%.4f");
 
-			static double V_Plume = 0;
-			ImGui::InputDouble("plume plasma potential [V]", &V_Plume, -1000.0f, 1000.0f, "%.4f");
-
-			static double V_Accel = -400;
-			ImGui::InputDouble("Acceleration grid (second grid) potential [V]", &V_Accel, -1000.0f, 4000.0f, "%.4f");
-
-			static double V_Screen = 2241;
-			ImGui::InputDouble("Screen grid (first grid) potential [m]", &V_Screen, 1.0f, 4000.0f, "%.4f");
-
-			geometry.Setdz(dz);
-			geometry.Setdr(dr);
-			geometry.Setdtheta(dtheta);
-
-			geometry.SetThetaLength(ThetaLength);
-			geometry.SetAxialLength(AxialLength);
-			geometry.SetRadialLength(RadialLength);
-
-			geometry.SetScreenGridWidth(ScreenGridWidth);
-			geometry.SetScreenGridRadius(ScreenGridHoleRadius);
-			geometry.SetScreenGridVoltage(V_Screen);
-
-			geometry.SetAccelGridWidth(AccelerationGridWidth);
-			geometry.SetAccelGridRadius(AccelerationGridHoleRadius);
-			geometry.SetAccelGridVoltage(V_Accel);
-
-			geometry.SetAxialDischargeLength(DischageRegionAxialLength);
-			geometry.SetDistanceBetweenGrids(DistanceBetweenGrids);
-
-			geometry.SetVDischarge(V_Discharge);
-			geometry.SetVPlume(V_Plume);
+				static double V_Screen = 2241;
+				ImGui::InputDouble("Screen grid (first grid) potential [m]", &V_Screen, 10, 50, "%.4f");
+				ImGui::TreePop();
+			}
 		}
 
 		ImGui::End();
 
-		//ImGui::ShowDemoWindow();
+		ImGui::ShowDemoWindow();
 
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		ImGui::Begin("Viewport");
 
 		m_ViewportWidth = ImGui::GetContentRegionAvail().x;
 		m_ViewportHeight = ImGui::GetContentRegionAvail().y;
 
-		if (m_Image) {
-			ImGui::Image(m_Image->GetDescriptorSet(), { (float)m_Image->GetWidth(), (float)m_Image->GetHeight() });
+
+		auto image = m_Renderer.GetFinalImage();
+		if (image) {
+			ImGui::Image(image->GetDescriptorSet(), { (float)image->GetWidth(), (float)image->GetHeight() });
 		}
 
 		ImGui::End();
+		ImGui::PopStyleVar();
 	}
 
 	void Render(float angle) {
 
-		if (m_Image == nullptr || m_ViewportWidth != m_Image->GetWidth()) {
-			m_Image = std::make_shared<Walnut::Image>(m_ViewportWidth, m_ViewportHeight, Walnut::ImageFormat::RGBA);
-			delete[] m_ImageData;
-			m_ImageData = new uint32_t[m_ViewportWidth * m_ViewportHeight];
-		}
+		Walnut::Timer timer;
 
-		Ionizer::PoissonSolver poisson(geometry);
-		poisson.LogGeometry();
-		poisson.SolvePoisson();
+		m_Renderer.OnResize(m_ViewportWidth, m_ViewportHeight);
+		m_Renderer.Render();
 
-		std::vector<uint32_t> hop = poisson.GetImage(m_ViewportWidth, m_ViewportHeight, angle);
+		m_LastRenderTime = timer.ElapsedMillis();
 
-		for (uint32_t i = 0; i < m_ViewportWidth*m_ViewportHeight; i++) {
-			m_ImageData[i] = hop[i];
-		}
-
-		m_Image->SetData(m_ImageData);
 	}
 private:
-	std::shared_ptr<Walnut::Image> m_Image;
-	uint32_t* m_ImageData = nullptr;
-	uint32_t m_ViewportWidth;
-	uint32_t m_ViewportHeight;
-	Ionizer::IonThrusterGeometry geometry;
+	IonizerApp::Renderer m_Renderer;
+	uint32_t m_ViewportWidth=0, m_ViewportHeight = 0;
+
+	float m_LastRenderTime = 0.0f;
 };
 
 Walnut::Application* Walnut::CreateApplication(int argc, char** argv) {

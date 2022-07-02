@@ -7,3 +7,6 @@
 [submodule "Ionizer/vendor/eigen"]
 	path = Ionizer/vendor/eigen
 	url = https://gitlab.com/libeigen/eigen.git
+[submodule "Application/vendor/ImTerm"]
+	path = Application/vendor/ImTerm
+	url = https://github.com/Organic-Code/ImTerm.git

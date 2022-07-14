@@ -100,7 +100,7 @@ public:
 
 		ImGui::End();
 
-		ImGui::ShowDemoWindow();
+		// ImGui::ShowDemoWindow();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		ImGui::Begin("Viewport");

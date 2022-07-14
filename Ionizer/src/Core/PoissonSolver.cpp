@@ -4,6 +4,7 @@
 #include "PoissonSolver.h"
 #include "Log.h"
 #include "Timer.h"
+#include "Color.h"
 
 namespace Ionizer {
 
@@ -190,12 +191,11 @@ namespace Ionizer {
 		std::vector<double> solution = m_Solver.GetSolution();
 		int step_j = m_RadialNodeCount * m_AxialNodeCount;
 
-		LOG_DEBUG("THETA IS {:.5}", angle);
-
 		angle = angle / 360 * 2 * 3.141592653589793;
-
 		int ThetaNode = (int)(angle / m_dtheta + 0.5) + 1;
+		LOG_DEBUG("THETA IS {:.5}", angle);
 		LOG_DEBUG("THETA NODE IS {}", ThetaNode);
+
 		solution.erase(solution.begin(), solution.begin() + step_j * (ThetaNode - 1));
 		solution.erase(solution.end() - step_j * (m_ThetaNodeCount - ThetaNode), solution.end());
 
@@ -203,24 +203,27 @@ namespace Ionizer {
 		std::vector<uint32_t> Image;
 		Image.resize(step_j);
 
-		int red;
+		float H;
+		Color color;
 
 		for (int height = 0; height < m_RadialNodeCount; height++) {
 			for (int width = 0; width < m_AxialNodeCount; width++) {
 				int heightSol = m_RadialNodeCount - height - 1;
 				int widthSol = width;
-				double a = solution[heightSol * m_AxialNodeCount + widthSol];
-				double b = m_VAccel;
+				double V = solution[heightSol * m_AxialNodeCount + widthSol];
+
 				double epsilon = std::pow(10, -6);
-				bool test1 = fabs(a - b) <= ((fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * epsilon);
-				b = m_VScreen;
-				bool test2 = fabs(a - b) <= ((fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * epsilon);
+				bool test1 = fabs(V - m_VAccel) <= ((fabs(V) < fabs(m_VAccel) ? fabs(m_VAccel) : fabs(V)) * epsilon);
+				bool test2 = fabs(V - m_VScreen) <= ((fabs(V) < fabs(m_VScreen) ? fabs(m_VScreen) : fabs(V)) * epsilon);
+
 				if (test1 || test2) {
-					Image[width + height * m_AxialNodeCount] = 0xff575757;
+					color.SetRGB(100, 100, 100);
+					Image[width + height * m_AxialNodeCount] = color.GetHEX();
 				}
 				else {
-					red = (a + 405) / (m_VDischarge - m_VAccel + 10) * 255;
-					Image[width + height * m_AxialNodeCount] = (red << 24) + ((0 & 0xff) << 16) + ((0 & 0xff) << 8) + (255 & 0xff);
+					H = 250-(V + 405) / (m_VDischarge - m_VAccel + 10) * 250;
+					color.SetHSV(H, 1, 1);
+					Image[width + height * m_AxialNodeCount] = color.GetHEX();
 				}
 			}
 		}

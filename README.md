@@ -1,7 +1,11 @@
 # Ionizer [![License](https://img.shields.io/github/license/sinaatalay/Ionizer.svg)](https://github.com/sinaatalay/Ionizer/blob/main/LICENSE)
 An ion thruster simulation tool. It's a work in progress. Please come to revisit later.
 
-Currently, **Ionizer** solves 3D [Poisson's equation](https://en.wikipedia.org/wiki/Poisson%27s_equation) for the potential field, and this is how it looks:
+It's a tricky simulation because the applicability of the continuum assumption is questionable since the operating pressures are pretty low. Therefore, the molecular theory has to be employed.
+
+**Ionizer** is being written in C++, and its goal is to solve the 3D Poisson's equation to calculate the electrostatic field inside the thruster and move the ions accordingly with the well-established molecular approach, PIC-DSMC.
+
+Currently, it solves 3D [Poisson's equation](https://en.wikipedia.org/wiki/Poisson%27s_equation) for the potential field, which is how it looks:
 
 <p align="center">
   <img src="https://github.com/sinaatalay/Ionizer/blob/main/figures/preview.png?raw=true">

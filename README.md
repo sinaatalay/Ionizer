@@ -13,7 +13,7 @@ Currently, it solves 3D [Poisson's equation](https://en.wikipedia.org/wiki/Poiss
 
 ## Installation
 
->These installation instructions assume that [Windows](https://www.microsoft.com/en-us/windows/), [Git](https://git-scm.com/), [Visual Studio 2022](https://devcenter.heroku.com/articles/heroku-cli), and [Vulkan SDK](https://vulkan.lunarg.com/) are installed.
+>These installation instructions assume that [Windows](https://www.microsoft.com/en-us/windows/), [Git](https://git-scm.com/), [Visual Studio 2022](https://visualstudio.microsoft.com/vs/), and [Vulkan SDK](https://vulkan.lunarg.com/) are installed.
 
  1. Clone the repository with `git clone --recursive https://github.com/sinaatalay/Ionizer`. If the repository was cloned non-recursively previously, use `git submodule update --init --recursive` to clone the necessary submodules.
 
